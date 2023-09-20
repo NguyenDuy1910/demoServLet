@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title> Java Servlets and JSP</title>
+    <style>
+        /* CSS code here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 30%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #submit {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #submit:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Join To Email List</h1>
+<p>Join to email list, enter your name and email address below.</p>
+
+<form action="login" method="post">
+    <input type="hidden" name="action" value="add">
+
+    <label>Email:</label>
+    <input type="email" name="email" required><br>
+    <label>Last Name:</label>
+    <input type="text" name="lastName" required><br>
+    <label>First Name:</label>
+    <input type="text" name="firstName" required><br>
+
+    <input type="submit" value="Join Now" id="submit">
+</form>
+</body>
+</html>
