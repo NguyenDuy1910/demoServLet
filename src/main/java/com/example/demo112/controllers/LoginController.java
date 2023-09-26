@@ -37,7 +37,7 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url = "/index.html";
+        String url = "/Form.html";
 
         String action = request.getParameter("action");
 
@@ -45,7 +45,7 @@ public class LoginController extends HttpServlet {
             action = "join";
 
         if (action.equals("join"))
-            url = "/index.html";
+            url = "/Form.html";
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
