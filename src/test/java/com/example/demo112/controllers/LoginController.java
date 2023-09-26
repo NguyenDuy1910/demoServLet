@@ -12,7 +12,7 @@ import com.example.demo112.models.User;
 public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String url = "/Form.html";
+        String url = "/index.html";
 
         String action = request.getParameter("action");
 
@@ -20,7 +20,7 @@ public class LoginController extends HttpServlet {
             action = "join";
 
         if (action.equals("join"))
-            url = "/Form.html";
+            url = "/index.html";
 
         else if (action.equals("add")) {
             String firstname = request.getParameter("firstName");

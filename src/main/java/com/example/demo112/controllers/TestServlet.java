@@ -13,7 +13,7 @@ public class TestServlet extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Hiển thị trang web (form) cho phương thức GET
-        request.getRequestDispatcher("index.html").forward(request, response);
+        request.getRequestDispatcher("Form.html").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
