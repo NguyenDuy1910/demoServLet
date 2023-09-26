@@ -17,7 +17,7 @@
 <span>${user.firstName}</span><br>
 
 <p>To enter another email address, click on the back button in your browser or the Return button shown below.</p>
-<form action=" " method="get">
+<form action="test" method="post">
     <input type="hidden" name="action" value="join">
     <input type="submit" value="Return">
 </form>
