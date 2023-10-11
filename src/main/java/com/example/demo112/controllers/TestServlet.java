@@ -14,7 +14,7 @@ public class TestServlet extends HttpServlet{
             throws ServletException, IOException {
         // Hiển thị trang web (form) cho phương thức GET
 
-        request.getRequestDispatcher("Form.html").forward(request, response);
+        request.getRequestDispatcher("form.html").forward(request, response);
     }
 
 

@@ -53,13 +53,13 @@ public class RegisterController extends HttpServlet {
         if (service.checkExistEmail(email)) {
             alertMsg = "Email already exist!";
             req.setAttribute("alert", alertMsg);
-            req.getRequestDispatcher("Form.html").forward(req, resp);
+            req.getRequestDispatcher("form.html").forward(req, resp);
             return;
         }
         if (service.checkExistUsername(username)) {
             alertMsg = "Username already exits!";
             req.setAttribute("alert", alertMsg);
-            req.getRequestDispatcher("Form.html").forward(req, resp);
+            req.getRequestDispatcher("form.html").forward(req, resp);
             return;
         }
 
@@ -79,7 +79,7 @@ public class RegisterController extends HttpServlet {
             // Xử lý khi đăng kí không thành công (ví dụ: hiển thị thông báo lỗi)
             alertMsg = "Registration failed!";
             req.setAttribute("alert", alertMsg);
-            req.getRequestDispatcher("Form.html").forward(req, resp);
+            req.getRequestDispatcher("form.html").forward(req, resp);
         }
 //
 //        if (isSuccess) {
