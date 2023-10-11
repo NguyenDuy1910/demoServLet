@@ -20,16 +20,9 @@ public class TestServlet extends HttpServlet{
         // Lấy PrintWriter từ đối tượng response
         PrintWriter out = response.getWriter();
 
-        // Đoạn văn bạn muốn hiển thị
-        String paragraph = "Đây là một ví dụ về việc hiển thị một câu văn bằng Servlet.";
 
-        // Ghi đoạn văn vào phản hồi
-        out.println(paragraph);
 
-        // Đảm bảo rằng bạn đã đóng PrintWriter
-        out.close();
-
-//        request.getRequestDispatcher("form.html").forward(request, response);
+     request.getRequestDispatcher("form.html").forward(request, response);
     }
 
 
