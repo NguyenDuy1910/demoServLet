@@ -21,9 +21,9 @@
     <tbody>
     <c:forEach items="${userList}" var="user">
         <tr>
-            <td>${user.password}</td>
             <td>${user.username}</td>
             <td>${user.email}</td>
+            <td>${user.password}</td>
             <!-- Thêm các cột khác tùy theo thông tin bạn muốn hiển thị -->
         </tr>
     </c:forEach>

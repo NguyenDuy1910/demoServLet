@@ -48,8 +48,8 @@ public class RegisterController extends HttpServlet {
 
         UserService service = new UserServiceImpl();
         String alertMsg = "";
-//
-//
+
+
         if (service.checkExistEmail(email)) {
             alertMsg = "Email already exist!";
             req.setAttribute("alert", alertMsg);

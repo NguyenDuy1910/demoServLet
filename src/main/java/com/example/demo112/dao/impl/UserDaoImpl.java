@@ -19,7 +19,7 @@ public ResultSet rs = null;
         @Override
         public void insert (User user)
         {
-            String sql = "INSERT INTO shopapp.users (username, email, password) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 
             try {
 
@@ -45,7 +45,7 @@ public ResultSet rs = null;
 
         @Override
         public void edit (User user){
-            String sql = "UPDATE shopapp.users SET email = ? , username = ?, password = ?,  role_id = ? WHERE id = ?";
+            String sql = "UPDATE users SET email = ? , username = ?, password = ?,  role_id = ? WHERE id = ?";
 
 
             try {
@@ -56,7 +56,7 @@ public ResultSet rs = null;
                 ps.setString(2, user.getUsername());
                 ps.setString(3, user.getPassword());
                 ps.setInt(5, user.getRoleId());
-                ps.setInt(6, user.getId());
+
                 ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -64,7 +64,7 @@ public ResultSet rs = null;
         }
         @Override
         public void delete ( int id){
-            String sql = "DELETE FROM shopapp.users WHERE id = ?";
+            String sql = "DELETE FROM users WHERE id = ?";
 
             try {
                 conn=new JDBCConnection().getConnection();
@@ -78,7 +78,7 @@ public ResultSet rs = null;
         }
         @Override
         public User get (String username){
-            String sql = "SELECT * FROM shopapp.users WHERE username = ? ";
+            String sql = "SELECT * FROM users WHERE username = ? ";
 
 
             try {
@@ -108,7 +108,7 @@ public ResultSet rs = null;
 
         @Override
         public User get ( int id){
-            String sql = "SELECT * FROM shopapp.users WHERE id = ? ";
+            String sql = "SELECT * FROM users WHERE id = ? ";
 
             try {
                 conn=new JDBCConnection().getConnection();
@@ -172,7 +172,7 @@ public ResultSet rs = null;
         @Override
         public List<User> search (String keyword){
             List<User> userList = new ArrayList<User>();
-            String sql = "SELECT * FROM shopapp.users WHERE name LIKE ? ";
+            String sql = "SELECT * FROM users WHERE name LIKE ? ";
 
             try {
                 conn=new JDBCConnection().getConnection();
@@ -204,7 +204,7 @@ public ResultSet rs = null;
     public boolean checkExistEmail(String email)
     {
         boolean duplicate = false;
-        String query = "select * from shopapp.users where email = ?;";
+        String query = "select * from users where email = ?;";
         conn = new JDBCConnection().getConnection();
         try
         {
@@ -229,7 +229,7 @@ public ResultSet rs = null;
     public boolean checkExistUsername(String username)
     {
         boolean duplicate = false;
-        String query = "SELECT * FROM shopapp.users WHERE username = ?;";
+        String query = "SELECT * FROM users WHERE username = ?;";
         conn = new JDBCConnection().getConnection();
 
         try {
