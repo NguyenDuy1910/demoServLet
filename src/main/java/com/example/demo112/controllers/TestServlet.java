@@ -18,7 +18,7 @@ public class TestServlet extends HttpServlet{
 
 
 
-     request.getRequestDispatcher("./form.html").forward(request, response);
+     request.getRequestDispatcher("form.html").forward(request, response);
     }
 
 
