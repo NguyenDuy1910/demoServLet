@@ -15,14 +15,10 @@ public class TestServlet extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Hiển thị trang web (form) cho phương thức GET
-        response.setContentType("text/html");
-
-        // Lấy PrintWriter từ đối tượng response
-        PrintWriter out = response.getWriter();
 
 
 
-     request.getRequestDispatcher("form.html").forward(request, response);
+     request.getRequestDispatcher("./form.html").forward(request, response);
     }
 
 
