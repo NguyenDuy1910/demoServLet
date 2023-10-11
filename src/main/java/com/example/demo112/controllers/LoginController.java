@@ -29,7 +29,7 @@ public class LoginController extends HttpServlet {
             User user = new User(lastname, firstname, email);
 
             request.setAttribute("user", user);
-            url = "/index.jsp";
+            url = "/WEB-INF/index.jsp";
         }
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
