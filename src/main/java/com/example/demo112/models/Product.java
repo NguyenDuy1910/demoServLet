@@ -1,6 +1,6 @@
 //package com.example.demo112.models;
 //
-//public class Product {
+//public  class Product {
 //
 //    private int id;
 //    private String name;

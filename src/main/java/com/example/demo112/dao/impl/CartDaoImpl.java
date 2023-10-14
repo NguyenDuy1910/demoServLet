@@ -66,7 +66,7 @@
 //
 //    @Override
 //    public Cart get(int id) {
-//        String sql = "SELECT cart.id, cart.buyDate, User.email, user.username, user.id AS user_id "
+//        String sql = "SELECT cart.id, cart.buyDate, User.e  mail, user.username, user.id AS user_id "
 //                + "FROM cart INNER JOIN user " + "ON cart.id_user = user.id WHERE cart.id=?";
 //        Connection con = super.getJDBCConnection();
 //

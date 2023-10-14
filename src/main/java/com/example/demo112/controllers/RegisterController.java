@@ -46,6 +46,8 @@ public class RegisterController extends HttpServlet
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
 //         WebSecurityConfig.setAccessControlHeaders(resp);
+        System.out.println(resp);
+        System.out.println(resp.getHeader("Access-Control-Allow-Origin"));
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
