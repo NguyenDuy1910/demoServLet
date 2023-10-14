@@ -1,0 +1,14 @@
+# Exclude development and build files
+.git
+#
+
+# Exclude IDE-specific files
+.idea
+*.iml
+
+# Exclude version control and build artifacts
+*.log
+*.swp
+
+
+# Exclude any other files or directories that are not needed in the Docker image
