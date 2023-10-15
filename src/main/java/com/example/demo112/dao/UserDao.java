@@ -16,7 +16,7 @@ public interface UserDao {
 
     List<User> search(String username);
 
-    boolean checkExistEmail(String email);
-
+//
+boolean checkExistEmail(String email);
     boolean checkExistUsername(String username);
 }
