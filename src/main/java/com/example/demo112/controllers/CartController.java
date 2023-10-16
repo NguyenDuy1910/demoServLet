@@ -24,8 +24,6 @@ public class CartController extends HttpServlet
             action = "join";
         if (action.equals("join")) {
             req.getRequestDispatcher("cart/viewproduct.jsp").forward(req, resp);
-        } else if (action.equals("cart")) {
-            req.getRequestDispatcher("cart/viewcart.jsp").forward(req, resp);
         }
     }
 
@@ -71,20 +69,5 @@ public class CartController extends HttpServlet
             resp.setCharacterEncoding("UTF-8");
             resp.getWriter().write(jsonResponse);
         }
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        InsertService service = new InsertServiceImpl();
-        String id_product = request.getParameter("id");
-        boolean delete = service.delete(id_product);
 
-        if (delete) {
-            // Xóa thành công
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("Delete not success");
-        } else {
-            // Xóa không thành công
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Delete not success");
-        }
-    }
     }

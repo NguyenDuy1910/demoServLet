@@ -19,7 +19,7 @@
 <body>
 <div class="container">
     <h2>Products</h2>
-    <a class="btn btn-primary btn-sm" id="add-more-button" href="#">Add more</a>
+    <a class="btn btn-primary btn-sm" id="add-more-button" href="view" methods="GET">Add more</a>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -36,17 +36,27 @@
 </div>
 
 <script>
-    // Add a click event handler for the "Add more" button
-    $('#add-more-button').click(function(e) {
-        e.preventDefault();
-        // Redirect to the "add_product.html" page or handle adding a new product here.
-        // Example: window.location.href = 'add_product.html';
-    });
+    // $('#add-more-button').click(function(e) {
+    //     e.preventDefault();
+    // function addMore() {
+    //     $.ajax({
+    //         url: 'show', // Replace with the correct URL mapping of your servlet
+    //         type: 'GET',
+    //         success: function() {
+    //             // Handle the success response here
+    //             // For example, you can redirect to another page:
+    //             window.location.href = 'add_product.html';
+    //         },
+    //         error: function() {
+    //             alert('Error occurred during the AJAX request.');
+    //         }
+    //     });
+    // }
 
     // Function to retrieve product data from the RESTful API
     function getProducts() {
         $.ajax({
-            url: 'show', // Replace with the correct URL to your RESTful API
+            url: 'show', // Replace with the correct URL mapping of your servlet
             type: 'POST',
             dataType: 'json',
             success: function(data) {
@@ -85,7 +95,7 @@
     // Function to delete a product using the RESTful API
     function deleteProduct(productId) {
         $.ajax({
-            url: 'view' + productId,
+            url: 'show?id=' + productId, // Replace with the correct URL mapping of your servlet
             type: 'DELETE',
             success: function() {
                 // Reload the product data after deleting

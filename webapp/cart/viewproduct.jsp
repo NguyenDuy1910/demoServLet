@@ -72,8 +72,7 @@
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-primary btn-sm" href="view?action=cart">View Cart</a>
-</div>
+    <a class="btn btn-primary btn-sm" href="show" method="GET">View Cart</a></div>
 
 <script>
     function addToCart(id, productName, price) {
