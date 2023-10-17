@@ -1,6 +1,5 @@
 package com.example.demo112.controllers;
 import javax.servlet.ServletException;
-import java.io.Console;
 import java.io.IOException;
 import java.util.List;
 //import com.example.demo112.configurations.WebSecurityConfig;
@@ -63,13 +62,13 @@ public class RegisterController extends HttpServlet
         if (service.checkExistEmail(email)) {
             alertMsg = "Email already exist!";
             req.setAttribute("alert", alertMsg);
-            req.getRequestDispatcher("form.html").forward(req, resp);
+            req.getRequestDispatcher("register.jsp").forward(req, resp);
             return;
         }
-        if (service.checkExistUsername(username)) {
-            alertMsg = "Username already exits!";
+            if (service.checkExistUsername(username)) {
+                alertMsg = "Username already exits!";
             req.setAttribute("alert", alertMsg);
-            req.getRequestDispatcher("form.html").forward(req, resp);
+            req.getRequestDispatcher("register.jsp").forward(req, resp);
             return;
         }
 
@@ -88,7 +87,7 @@ public class RegisterController extends HttpServlet
                 // Xử lý khi đăng kí không thành công (ví dụ: hiển thị thông báo lỗi)
                 alertMsg = "Registration failed!";
                 req.setAttribute("alert", alertMsg);
-                req.getRequestDispatcher("form.html").forward(req, resp);
+                req.getRequestDispatcher("register.jsp").forward(req, resp);
             }
 
 
@@ -104,6 +103,10 @@ public class RegisterController extends HttpServlet
 //            req.getRequestDispatcher(Constant.Path.REGISTER).forward(req, resp);
 //        }
     }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    {
+            req.getRequestDispatcher("register.jsp").forward(req,resp);    }
 
 
 }
