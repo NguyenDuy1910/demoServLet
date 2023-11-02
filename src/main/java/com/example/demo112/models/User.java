@@ -1,66 +1,103 @@
 package com.example.demo112.models;
 
-import java.io.Serializable;
-public class User implements Serializable {
-    private int id;
-    private String email;
-    private String username;
-    private String password;
-    private String avatar;
-    private int roleId;
-    public User() {
-        super();
-    }
-    public User(String username,String email,  String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-    }
-    public User(int id, String email, String username, String password, String avatar, int roleId) {
+import javax.persistence.*;
+import java.util.Date;
 
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.avatar = avatar;
-        this.roleId = roleId;
-    }
-    public int getId() {
+@Entity
+@Table(name = "users")
+
+public class User extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "fullname", length = 100)
+    private String fullName;
+
+    @Column(name = "phone_number", length = 10, nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "address", length = 200)
+    private String address;
+
+    @Column(name = "password", length = 200, nullable = false)
+    private String password;
+
+    @Column(name = "is_active")
+    private boolean active;
+
+    @Column(name = "date_of_birth")
+    private Date dateOfBirth;
+
+    // Add getters and setters for all fields
+
+    public Long getId() {
         return id;
     }
-    public void setId(int id) {
+
+    public void setId(Long id) {
         this.id = id;
     }
-    public String getEmail() {
-        return email;
+
+    public String getFullName() {
+        return fullName;
     }
-    public void setEmail(String email) {
-        this.email = email;
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
-    public String getUsername() {
-        return username;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
-    public void setUsername(String username) {
-        this.username = username;
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getAvatar() {
-        return avatar;
-    }
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-    public int getRoleId() {
-        return roleId;
-    }
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+
+    public boolean isActive() {
+        return active;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+    public User() {
+        // Default constructor
+    }
+
+    public User( String fullName, String phoneNumber, String address, String password,  Date dateOfBirth) {
+
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+
+    }
 }

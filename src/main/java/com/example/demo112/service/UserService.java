@@ -1,28 +1,50 @@
 package com.example.demo112.service;
+
+import com.example.demo112.dtos.UserDTO;
 import com.example.demo112.models.User;
-import java.util.List;
+import com.example.demo112.repositories.UserRepository;
 
-public interface UserService {
-    void insert(User user);
+import java.util.Optional;
+import java.util.zip.DataFormatException;
 
-    void edit(User user);
+public class UserService implements IUserService {
+    private final  UserRepository userRepository=new UserRepository();
 
-    void delete(int id);
 
-    User get(String username);
 
-    User get(int id);
+    public User createUser(UserDTO userDTO) throws Exception {
+        String phoneNumber=userDTO.getPhoneNumber();
+        if (userRepository.existsByPhoneNumber(phoneNumber))
+        {
+            throw new Exception("Phone number already exists");
+        }
+        else {
+            User user = new User(userDTO.getFullName(), userDTO.getPhoneNumber(),
+                    userDTO.getAddress(), userDTO.getPassword(), userDTO.getDateOfBirth());
 
-    User login(String username, String password);
+            return userRepository.save(user);
+        }
+    }
 
-    boolean register( String username,String email, String password);
+    public String login(String phoneNumber, String password, Long roleId) throws Exception {
+        Optional<User> optionalUser = userRepository.findUserByPhoneNumber(phoneNumber);
 
-    List<User> getAll();
-
-    List<User> search(String keyword);
-
-    boolean checkExistEmail(String email);
-
-    boolean checkExistUsername(String username);
-
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // Kiểm tra mật khẩu
+            if (user.getPassword().equals(password)) {
+                // Kiểm tra vai trò (role) của người dùng
+                if (roleId == 1) {
+                    // Logic đăng nhập thành công
+                    return "Login successful";
+                } else {
+                    throw new Exception("Invalid role");
+                }
+            } else {
+                throw new Exception("Invalid password");
+            }
+        } else {
+            throw new Exception("Phone number not found");
+        }
+    }
 }
