@@ -16,6 +16,25 @@ public class OrderDetailRepository {
         Configuration configuration = new Configuration().configure();
         sessionFactory = configuration.buildSessionFactory();
     }
+    public void saveAll(List<OrderDetail> orderDetails) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+
+        try {
+            transaction = session.beginTransaction();
+            for (OrderDetail orderDetail : orderDetails) {
+                session.save(orderDetail);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 
     public List<OrderDetail> findByOrderId(Long orderId) {
         // Sử dụng Hibernate để truy vấn CSDL và lấy danh sách OrderDetail dựa trên orderId

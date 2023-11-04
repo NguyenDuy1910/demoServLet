@@ -54,8 +54,8 @@ public class Order extends BaseEntity {
     @Column(name = "payment_method")
     private String paymentMethod;
 
-//    @Column(name = "active")
-//    private Boolean active;//thuộc về admin
+    @Column(name = "active")
+    private Boolean active;//thuộc về admin
 
     public User getUser() {
         return user;
@@ -175,5 +175,13 @@ public class Order extends BaseEntity {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

@@ -33,6 +33,24 @@ public class OrderRepository {
 
         return null;
     }
+    public Order save(Order order) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+
+        try {
+            transaction = session.beginTransaction();
+            session.save(order);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return order;
+    }
 
     public List<Order> findByUserId(Long userId) {
         Session session = sessionFactory.openSession();
