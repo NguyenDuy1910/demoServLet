@@ -29,6 +29,15 @@ public class User extends BaseEntity {
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
+    @Column(name = "facebook_account_id")
+    private int facebookAccountId;
+
+    @Column(name = "google_account_id")
+    private int googleAccountId;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private com.example.demo112.models.Role role;
 
     // Add getters and setters for all fields
 
@@ -91,13 +100,29 @@ public class User extends BaseEntity {
         // Default constructor
     }
 
-    public User( String fullName, String phoneNumber, String address, String password,  Date dateOfBirth) {
 
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.password = password;
-        this.dateOfBirth = dateOfBirth;
 
+    public int getFacebookAccountId() {
+        return facebookAccountId;
+    }
+
+    public void setFacebookAccountId(int facebookAccountId) {
+        this.facebookAccountId = facebookAccountId;
+    }
+
+    public int getGoogleAccountId() {
+        return googleAccountId;
+    }
+
+    public void setGoogleAccountId(int googleAccountId) {
+        this.googleAccountId = googleAccountId;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

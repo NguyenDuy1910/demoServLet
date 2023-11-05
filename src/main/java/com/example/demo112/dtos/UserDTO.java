@@ -25,6 +25,15 @@ public class UserDTO {
     @NotNull(message = "Date of birth is required")
     @JsonProperty("date_of_birth")
     private Date dateOfBirth;
+    @JsonProperty("facebook_account_id")
+    private int facebookAccountId;
+
+    @JsonProperty("google_account_id")
+    private int googleAccountId;
+
+    @NotNull(message = "Role ID is required")
+    @JsonProperty("role_id")
+    private Long roleId;
 
     @JsonProperty("address")
     private String address;
@@ -75,5 +84,29 @@ public class UserDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getFacebookAccountId() {
+        return facebookAccountId;
+    }
+
+    public void setFacebookAccountId(int facebookAccountId) {
+        this.facebookAccountId = facebookAccountId;
+    }
+
+    public int getGoogleAccountId() {
+        return googleAccountId;
+    }
+
+    public void setGoogleAccountId(int googleAccountId) {
+        this.googleAccountId = googleAccountId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

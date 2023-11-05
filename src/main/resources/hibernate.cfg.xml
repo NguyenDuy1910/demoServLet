@@ -22,10 +22,12 @@
     <!-- DB schema will be updated if needed -->
     <property name="hibernate.hbm2ddl.auto">update</property>
     <mapping class="com.example.demo112.models.User" />
+    <mapping class="com.example.demo112.models.Role" />
     <mapping class="com.example.demo112.models.Product" />
     <mapping class="com.example.demo112.models.ProductImage" />
     <mapping class="com.example.demo112.models.Order" />
     <mapping class="com.example.demo112.models.OrderDetail" />
+
 
 
   </session-factory>

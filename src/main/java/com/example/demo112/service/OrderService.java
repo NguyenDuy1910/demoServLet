@@ -40,7 +40,7 @@ public Order createOrder(OrderDTO orderDTO) throws Exception{
     order.setTotalMoney(orderDTO.getTotalMoney());
 orderRepository.save(order);
     List<OrderDetail>orderDetails=new ArrayList<>();
-for(CartItemDTO cartItemDTO: orderDTO.getCartItems())
+    for(CartItemDTO cartItemDTO: orderDTO.getCartItems())
 {
     OrderDetail orderDetail=new OrderDetail();
     orderDetail.setOrder(order);
