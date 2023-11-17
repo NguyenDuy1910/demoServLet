@@ -7,6 +7,7 @@ import java.util.Date;
 @Table(name = "users")
 
 public class User extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -14,6 +15,7 @@ public class User extends BaseEntity {
 
     @Column(name = "fullname", length = 100)
     private String fullName;
+
 
     @Column(name = "phone_number", length = 10, nullable = false)
     private String phoneNumber;
@@ -38,6 +40,8 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private com.example.demo112.models.Role role;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Order> orders;
 
     // Add getters and setters for all fields
 

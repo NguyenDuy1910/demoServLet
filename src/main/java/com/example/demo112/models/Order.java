@@ -1,7 +1,6 @@
 package com.example.demo112.models;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -11,7 +10,9 @@ public class Order extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+
+
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -46,7 +47,7 @@ public class Order extends BaseEntity {
     private String shippingAddress;
 
     @Column(name = "shipping_date")
-    private LocalDate shippingDate;
+    private Date shippingDate;
 
     @Column(name = "tracking_number")
     private String trackingNumber;
@@ -153,11 +154,11 @@ public class Order extends BaseEntity {
         this.shippingAddress = shippingAddress;
     }
 
-    public LocalDate getShippingDate() {
+    public Date getShippingDate() {
         return shippingDate;
     }
 
-    public void setShippingDate(LocalDate shippingDate) {
+    public void setShippingDate(Date shippingDate) {
         this.shippingDate = shippingDate;
     }
 

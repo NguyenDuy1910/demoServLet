@@ -12,8 +12,7 @@ import com.example.demo112.repositories.OrderRepository;
 import com.example.demo112.repositories.ProductRepository;
 import com.example.demo112.repositories.UserRepository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,17 +24,22 @@ public class OrderService implements IOrderService {
     private final OrderDetailRepository orderDetailRepository=new OrderDetailRepository();
 @Override
 public Order createOrder(OrderDTO orderDTO) throws Exception{
-    User user=userRepository.findById(orderDTO.getUserId()) ;
-    Order order=new Order();
+    User user = userRepository.findById(orderDTO.getUserId());
+    Order order = new Order();
     order.setUser(user);
+    //tôi đặt hàng nhưng có thể lấy tên,địa chỉ người khác nên không nhất thiết trường fullName phải giống bảng
+
+    order.setEmail(orderDTO.getEmail());
+    order.setPhoneNumber(user.getPhoneNumber());
     order.setOrderDate(new Date());
-//    order.setStatus(OrderStatus.);
-    LocalDate shippingDate = orderDTO.getShippingDate() == null
-            ? LocalDate.now() : orderDTO.getShippingDate();
-    if (shippingDate.isBefore(LocalDate.now())) {
-        throw new DataNotFoundException("Date must be at least today !");
-    }
-    order.setShippingDate(shippingDate);
+////    order.setStatus();
+//    Date shippingDate = orderDTO.getShippingDate() == null
+//            ? Date.now() : orderDTO.getShippingDate();
+//    if (shippingDate.isBefore(Date.now())) {
+//        throw new DataNotFoundException("Date must be at least today !");
+//    }
+
+    order.setShippingDate(orderDTO.getShippingDate());
     order.setActive(true) ;
     order.setTotalMoney(orderDTO.getTotalMoney());
 orderRepository.save(order);
@@ -45,14 +49,15 @@ orderRepository.save(order);
     OrderDetail orderDetail=new OrderDetail();
     orderDetail.setOrder(order);
     Long productId=cartItemDTO.getProductId();
+
     int quantity=cartItemDTO.getQuantity();
-    Product product=productRepository.findProductById(productId);
-    System.out.println(product);
-    orderDetail.setProduct(product);
-    orderDetail.setNumberOfProducts(quantity);
-    orderDetail.setPrice(product.getPrice());
-    orderDetails.add(orderDetail);
-    orderDetailRepository.saveAll(orderDetails);
+//    Product product=productRepository.findProductById(productId);
+//    System.out.println(product);
+//    orderDetail.setProduct(product);
+//    orderDetail.setNumberOfProducts(quantity);
+//    orderDetail.setPrice(product.getPrice());
+//    orderDetails.add(orderDetail);
+//    orderDetailRepository.saveAll(orderDetails);
 }
 return order;
 

@@ -84,7 +84,8 @@ public class ProductImageController extends HttpServlet {
         }
         String filename = Objects.requireNonNull(filePart.getSubmittedFileName());
         String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
-        java.nio.file.Path uploadDir = Paths.get("uploads");
+        java.nio.file.Path uploadDir = Paths.get("/home/quocduy/Documents/JspServLetUTE/demoServLet/uploads");
+
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
         }

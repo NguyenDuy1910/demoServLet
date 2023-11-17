@@ -1,28 +1,33 @@
 package com.example.demo112.repositories;
 
 import com.example.demo112.models.Role;
-import com.example.demo112.models.User;
-import com.example.demo112.utility.HibernateUtility;
 import org.hibernate.Session;
-
+import org.hibernate.SessionFactory;
+import com.example.demo112.utility.HibernateUtility;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-public class RoleRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
+import java.util.Optional;
 
-    public Role findById(Long Roleid) {
-        Session session = HibernateUtility.getSessionFactory().openSession();
+public class RoleRepository {
+
+
+    private final SessionFactory sessionFactory;
+
+    public RoleRepository() {
+        this.sessionFactory = HibernateUtility.getSessionFactory();
+    }
+
+    public Optional<Role> findById(Long roleId) {
+        Session session = sessionFactory.openSession();
 
         try {
-            return session.get(Role.class, Roleid);
+
+            return Optional.ofNullable(session.get(Role.class, roleId));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
 
-        return null;
+        return Optional.empty();
     }
 }

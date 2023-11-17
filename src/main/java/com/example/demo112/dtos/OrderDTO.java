@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class OrderDTO {
@@ -38,7 +38,7 @@ public class OrderDTO {
     private String shippingAddress;
 
     @JsonProperty("shipping_date")
-    private LocalDate shippingDate;
+    private Date shippingDate;
 
     @JsonProperty("payment_method")
     private String paymentMethod;
@@ -121,11 +121,11 @@ public class OrderDTO {
         this.shippingAddress = shippingAddress;
     }
 
-    public LocalDate getShippingDate() {
+    public Date getShippingDate() {
         return shippingDate;
     }
 
-    public void setShippingDate(LocalDate shippingDate) {
+    public void setShippingDate(Date shippingDate) {
         this.shippingDate = shippingDate;
     }
 

@@ -5,6 +5,9 @@ import com.example.demo112.models.User;
 import com.example.demo112.service.IUserService;
 import com.example.demo112.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/register")
+@WebServlet("/users/register")
 public class UserRegisterController extends HttpServlet {
     private final IUserService userService=new UserService();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -46,7 +49,12 @@ public class UserRegisterController extends HttpServlet {
                 User user = userService.createUser(userDTO);
                 // Handle successful registration
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("Registration successful");
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("message", "Registration successful");
+                response.setContentType("application/json");
+                response.getWriter().write(new Gson().toJson(jsonResponse));
+
+
             } catch (Exception e) {
                 sendBadRequestResponse(response, e.getMessage());
             }

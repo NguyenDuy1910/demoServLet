@@ -1,8 +1,6 @@
 package com.example.demo112.models;
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 @Table(name="products")
 
@@ -20,8 +18,9 @@ public  class Product extends BaseEntity {
     private String thumbnail;
     @Column (name="description")
     private String description;
-
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private com.example.demo112.models.Category category;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImage> productImages;
 
@@ -65,13 +64,13 @@ public  class Product extends BaseEntity {
         this.id = id;
     }
     public Product(){}
-    public Product(String name, Float price,String thumbnail,String description)
-    {
-        this.name=name;
-        this.price=price;
-        this.thumbnail=thumbnail;
-        this.description=description;
-    }
+//    public Product(String name, Float price,String thumbnail,String description,int )
+//    {
+//        this.name=name;
+//        this.price=price;
+//        this.thumbnail=thumbnail;
+//        this.description=description;
+//    }
 
     public List<ProductImage> getProductImages() {
         return productImages;
@@ -79,5 +78,13 @@ public  class Product extends BaseEntity {
 
     public void setProductImages(List<ProductImage> productImages) {
         this.productImages = productImages;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

@@ -18,17 +18,22 @@
     <property name="hibernate.connection.characterEncoding">utf8</property>
     <property name="hibernate.connection.useUnicode">true</property>
     <property name="hibernate.enable_lazy_load_no_trans">true</property>
+      <property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider</property>
+      <property name="hibernate.c3p0.min_size">5</property>
+      <property name="hibernate.c3p0.max_size">20</property>
+      <property name="hibernate.c3p0.timeout">1800</property>
+      <property name="hibernate.c3p0.max_statements">50</property>
+      <property name="hibernate.c3p0.idle_test_period">300</property>
 
-    <!-- DB schema will be updated if needed -->
-    <property name="hibernate.hbm2ddl.auto">update</property>
+      <!-- Các mapping class của bạn -->
     <mapping class="com.example.demo112.models.User" />
     <mapping class="com.example.demo112.models.Role" />
     <mapping class="com.example.demo112.models.Product" />
     <mapping class="com.example.demo112.models.ProductImage" />
     <mapping class="com.example.demo112.models.Order" />
     <mapping class="com.example.demo112.models.OrderDetail" />
-
-
+      <mapping class="com.example.demo112.models.Category"/>
+      <mapping class="com.example.demo112.models.Token"/>
 
   </session-factory>
 </hibernate-configuration>

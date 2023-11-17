@@ -1,30 +1,39 @@
 package com.example.demo112.service;
 
 import com.example.demo112.dtos.ProductDTO;
-import com.example.demo112.dtos.ProductImageDTO;
 import com.example.demo112.exceptions.DataNotFoundException;
+import com.example.demo112.models.Category;
 import com.example.demo112.models.Product;
 import com.example.demo112.models.ProductImage;
+import com.example.demo112.repositories.CategoryRepository;
 import com.example.demo112.repositories.ProductImageRepository;
 import com.example.demo112.repositories.ProductRepository;
+import com.example.demo112.responses.ProductResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
 public class ProductService implements IProductService {
     private final ProductRepository productRepository = new ProductRepository();
     private final ProductImageRepository productImageRepository = new ProductImageRepository();
+    private final CategoryRepository categoryRepository = new CategoryRepository();
     @Override
 
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
-        // Kiểm tra xem productDTO có đầy đủ thông tin cần thiết hay không
         if (productDTO == null || productDTO.getName() == null || productDTO.getPrice() == null) {
             throw new DataNotFoundException("Missing required data for creating a product");
         }
+        Category existingCategory = categoryRepository.findById(productDTO.getCategoryId());
 
-        // Tạo đối tượng Product từ ProductDTO
-        Product product = new Product(productDTO.getName(),productDTO.getPrice()
-                ,productDTO.getThumbnail(),productDTO.getDescription());
 
+        // Tạo đối tượng Product từ ProsetductDTO
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setCategory(existingCategory);
+        product.setThumbnail(productDTO.getThumbnail());
+        product.setDescription(productDTO.getDescription());
 
         // Lưu Product vào cơ sở dữ liệu
         return productRepository.addProduct(product);
@@ -50,5 +59,14 @@ public class ProductService implements IProductService {
 
         // Lưu ProductImage vào cơ sở dữ liệu
         return productImageRepository.save(newProductImage);
+    }
+
+    @Override
+    public Page<ProductResponse> getAllProducts(String keyword,
+                                                Long categoryId, PageRequest pageRequest) {
+        // Lấy danh sách sản phẩm theo trang (page), giới hạn (limit), và categoryId (nếu có)
+        Page<Product> productsPage;
+        productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
     }
 }
