@@ -13,7 +13,7 @@ import java.util.List;
 public interface IProductService {
     Product createProduct(ProductDTO productDTO) throws DataNotFoundException;
 //    Product getProductById(long id ) throws Exception;
-Page<ProductResponse> getAllProducts(String keyword, Long categoryId, PageRequest pageRequest);
+Page<ProductResponse> getAllProducts(String keyword, int categoryId, PageRequest pageRequest);
 //Product updateProduct(long id, ProductDTO productDTO) throws Exception;
 //    void deleteProduct(long id);
 //    boolean existsByName(String name);

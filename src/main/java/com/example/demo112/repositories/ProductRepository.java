@@ -63,7 +63,7 @@ public class ProductRepository {
         }
     }
 
-    public Page<Product> searchProducts(Long categoryId, String keyword, PageRequest pageRequest) {
+    public Page<Product> searchProducts(int categoryId, String keyword, PageRequest pageRequest) {
         try (Session session = SESSION_FACTORY.openSession()) {
             String hql = "FROM Product p WHERE (:categoryId IS NULL OR :categoryId = 0 OR p.category.id = :categoryId) " +
                     "AND (:keyword IS NULL OR :keyword = '' OR p.name LIKE :keyword OR p.description LIKE :keyword)";
@@ -74,7 +74,9 @@ public class ProductRepository {
             query.setMaxResults(pageRequest.getPageSize());
 
             List<Product> productsList = query.list();
-            long totalResults = getTotalResults(categoryId, keyword);
+            long totalResults = getTotalResults(categoryId, keyword, session);
+//            long totalResults=3;
+
             return new PageImpl<>(productsList, pageRequest, totalResults);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,8 +84,8 @@ public class ProductRepository {
         }
     }
 
-    private long getTotalResults(Long categoryId, String keyword) {
-        try (Session session = SESSION_FACTORY.openSession()) {
+    private long getTotalResults(int categoryId, String keyword, Session session) {
+        try {
             String countHql = "SELECT COUNT(p) FROM Product p WHERE (:categoryId IS NULL OR :categoryId = 0 OR p.category.id = :categoryId) " +
                     "AND (:keyword IS NULL OR :keyword = '' OR p.name LIKE :keyword OR p.description LIKE :keyword)";
             Query<Long> countQuery = session.createQuery(countHql, Long.class);

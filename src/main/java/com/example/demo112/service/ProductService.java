@@ -63,9 +63,12 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<ProductResponse> getAllProducts(String keyword,
-                                                Long categoryId, PageRequest pageRequest) {
+                                                int categoryId, PageRequest pageRequest) {
         // Lấy danh sách sản phẩm theo trang (page), giới hạn (limit), và categoryId (nếu có)
         Page<Product> productsPage;
+        System.out.println("hihi");
+        System.out.println(categoryId);
+//        List<Product> list=productRepository.findAll(1,3);
         productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
     }

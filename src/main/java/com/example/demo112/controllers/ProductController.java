@@ -2,11 +2,14 @@ package com.example.demo112.controllers;
 
 import com.example.demo112.dtos.ProductDTO;
 import com.example.demo112.models.Product;
+import com.example.demo112.responses.LocalDateTimeTypeAdapter;
 import com.example.demo112.responses.ProductListResponse;
 import com.example.demo112.responses.ProductResponse;
 import com.example.demo112.service.IProductService;
 import com.example.demo112.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -46,25 +50,42 @@ public class ProductController extends HttpServlet {
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        int currentPage = Integer.parseInt(request.getParameter("page")); // Trang hiện tại
-        int limit = Integer.parseInt(request.getParameter("limit")); // Số lượng mục trên mỗi trang
-        Long categoryId = Long.parseLong(request.getParameter("category_id"));
-        String keyword = request.getParameter("");
-        PageRequest pageRequest = PageRequest.of(
-                currentPage, limit,
-                Sort.by("id").ascending()
-        );
-        logger.info(String.format("keyword = %s, category_id = %d, page = %d, limit = %d",
-                keyword, categoryId, currentPage, limit));
-        // Tính toán các thông tin phân tran3g
-        Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
-        int totalPages = productPage.getTotalPages();
-        List<ProductResponse> products = productPage.getContent();
-        ProductListResponse product_response = new ProductListResponse();
-        product_response.setProducts(products);
-        product_response.setTotalPages(totalPages);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            int currentPage = Integer.parseInt(request.getParameter("page")); // Trang hiện tại
+            int limit = Integer.parseInt(request.getParameter("limit")); // Số lượng mục trên mỗi trang
+            int categoryId = Integer.parseInt(request.getParameter("category_id"));
+            String keyword = request.getParameter("keyword");
+            PageRequest pageRequest = PageRequest.of(
+                    currentPage, limit,
+                    Sort.by("id").ascending()
+            );
+            logger.info(String.format("keyword = %s, category_id = %d, page = %d, limit = %d",
+                    keyword, categoryId, currentPage, limit));
+            // Tính toán các thông tin phân trang
+            Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
+            int totalPages = productPage.getTotalPages();
+            List<ProductResponse> products = productPage.getContent();
+            ProductListResponse productResponse = new ProductListResponse();
+            productResponse.setProducts(products);
+            productResponse.setTotalPages(totalPages);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                    .create();
 
+            String jsonString = gson.toJson(productResponse);
+            response.getWriter().write(jsonString);
+        } catch (NumberFormatException e) {
+            // Xử lý lỗi khi không thể chuyển đổi thành số nguyên
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Invalid request parameters");
+        } catch (IOException e) {
+            // Xử lý lỗi IO
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("An error occurred");
+        }
     }
 
 
