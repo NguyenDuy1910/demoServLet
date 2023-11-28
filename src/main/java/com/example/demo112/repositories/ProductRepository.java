@@ -12,7 +12,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 
 public class ProductRepository {
@@ -70,7 +74,8 @@ public class ProductRepository {
             Query<Product> query = session.createQuery(hql, Product.class);
             query.setParameter("categoryId", categoryId);
             query.setParameter("keyword", "%" + keyword + "%");
-            query.setFirstResult(pageRequest.getPageNumber() * pageRequest.getPageSize());
+//            bắt đầu page từ 1
+            query.setFirstResult((pageRequest.getPageNumber() - 1) * pageRequest.getPageSize());
             query.setMaxResults(pageRequest.getPageSize());
 
             List<Product> productsList = query.list();
@@ -91,6 +96,7 @@ public class ProductRepository {
             Query<Long> countQuery = session.createQuery(countHql, Long.class);
             countQuery.setParameter("categoryId", categoryId);
             countQuery.setParameter("keyword", "%" + keyword + "%");
+//            countQuery.setFirstResult((pageRequest.getPageNumber() - 1) * pageRequest.getPageSize());
             return countQuery.uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,6 +104,31 @@ public class ProductRepository {
         }
     }
 
+    public Optional<Product> getDetailProduct(Long productId) {
+        try (Session session = SESSION_FACTORY.openSession()) {
+            String hql = "SELECT p FROM Product p LEFT JOIN FETCH p.productImages WHERE p.id = :productId";
+            Query<Product> query = session.createQuery(hql, Product.class);
+            query.setParameter("productId", productId);
+
+            Product product = query.uniqueResult();
+            return Optional.ofNullable(product);
+        }
+    }
+
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        try (Session session = SESSION_FACTORY.openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+            Root<Product> root = criteriaQuery.from(Product.class);
+            criteriaQuery.select(root).where(root.get("id").in(productIds));
+            Query<Product> query = session.createQuery(criteriaQuery);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Xử lý các ngoại lệ xảy ra
+            throw new RuntimeException("Không thể lấy danh sách sản phẩm theo IDs.", e);
+        }
+    }
 
     public void close() {
         SESSION_FACTORY.close();

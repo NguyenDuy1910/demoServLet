@@ -12,6 +12,7 @@ public class OrderDetailDTO {
     @JsonProperty("product_id")
     private Long productId;
 
+    @JsonProperty("price")
     @Min(value=0, message = "Product's ID must be >= 0")
     private Float price;
 
@@ -65,4 +66,12 @@ public class OrderDetailDTO {
         this.color = color;
     }
     public OrderDetailDTO(){}
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
 }

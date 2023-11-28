@@ -8,11 +8,13 @@ import com.example.demo112.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IProductService {
     Product createProduct(ProductDTO productDTO) throws DataNotFoundException;
-//    Product getProductById(long id ) throws Exception;
+
+    Product getProductById(Long id) throws IOException;
 Page<ProductResponse> getAllProducts(String keyword, int categoryId, PageRequest pageRequest);
 //Product updateProduct(long id, ProductDTO productDTO) throws Exception;
 //    void deleteProduct(long id);
@@ -21,6 +23,6 @@ Page<ProductResponse> getAllProducts(String keyword, int categoryId, PageRequest
             Long productId,
             String filename) throws Exception;
 
-//    List<Product> findProductsById(List<Long> productIds);
+    List<Product> findProductsByIds(List<Long> productIds);
 
 }

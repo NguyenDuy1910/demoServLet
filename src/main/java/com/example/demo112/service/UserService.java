@@ -14,7 +14,7 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository = new RoleRepository();
     private final JwtTokenUtils jwtTokenUtil = new JwtTokenUtils();
 
-
+    @Override
 
     public User createUser(UserDTO userDTO) throws Exception {
         String phoneNumber = userDTO.getPhoneNumber();
@@ -45,12 +45,18 @@ public class UserService implements IUserService {
             user.setActive(true);
 
             user.setRole(role);
+//            if(userDTO.getFacebookAccountId()==0&&userDTO.getGoogleAccountId()==0)
+//            {
+//                String password=userDTO.getPassword();
+//                String encodedPassword=passwordEnc
+//            }
             return userRepository.save(user);
         }
 
         throw new Exception("Role not found");
     }
 
+    @Override
     public String login(String phoneNumber, String password, Long roleId) throws Exception {
         Optional<User> optionalUser = userRepository.findUserByPhoneNumber(phoneNumber);
 
@@ -79,6 +85,21 @@ public class UserService implements IUserService {
             }
         } else {
             throw new Exception("Phone number not found");
+        }
+    }
+
+    @Override
+    public User getUserDetailsFromToken(String token) throws Exception {
+        if (jwtTokenUtil.isTokenExpired(token)) {
+            throw new Exception("Token is expired");
+        }
+        String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
+        Optional<User> user = userRepository.findUserByPhoneNumber(phoneNumber);
+
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new Exception("User not found");
         }
     }
 }

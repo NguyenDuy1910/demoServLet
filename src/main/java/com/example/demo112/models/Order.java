@@ -1,7 +1,11 @@
 package com.example.demo112.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -32,7 +36,7 @@ public class Order extends BaseEntity {
     private String note;
 
     @Column(name="order_date")
-    private Date orderDate;
+    private LocalDate orderDate;
 
     @Column(name = "status")
     private String status;
@@ -47,13 +51,16 @@ public class Order extends BaseEntity {
     private String shippingAddress;
 
     @Column(name = "shipping_date")
-    private Date shippingDate;
+    private LocalDate shippingDate;
 
     @Column(name = "tracking_number")
     private String trackingNumber;
 
     @Column(name = "payment_method")
     private String paymentMethod;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderDetail> orderDetails;
 
     @Column(name = "active")
     private Boolean active;//thuộc về admin
@@ -106,11 +113,11 @@ public class Order extends BaseEntity {
         this.note = note;
     }
 
-    public Date getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -154,11 +161,11 @@ public class Order extends BaseEntity {
         this.shippingAddress = shippingAddress;
     }
 
-    public Date getShippingDate() {
+    public LocalDate getShippingDate() {
         return shippingDate;
     }
 
-    public void setShippingDate(Date shippingDate) {
+    public void setShippingDate(LocalDate shippingDate) {
         this.shippingDate = shippingDate;
     }
 
@@ -184,5 +191,13 @@ public class Order extends BaseEntity {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

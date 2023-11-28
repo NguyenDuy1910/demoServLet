@@ -12,7 +12,9 @@ import com.example.demo112.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductService implements IProductService {
     private final ProductRepository productRepository = new ProductRepository();
@@ -72,4 +74,18 @@ public class ProductService implements IProductService {
         productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
     }
+
+    @Override
+    public Product getProductById(Long productId) throws IOException {
+        Optional<Product> optionalProduct = productRepository.getDetailProduct(productId);
+        if (optionalProduct.isPresent()) {
+            return optionalProduct.get();
+        }
+        throw new IOException("Co ngoai le");
+    }
+
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        return productRepository.findProductsByIds(productIds);
+    }
+
 }

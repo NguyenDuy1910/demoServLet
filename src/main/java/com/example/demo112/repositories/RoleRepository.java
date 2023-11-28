@@ -1,12 +1,15 @@
 package com.example.demo112.repositories;
 
 import com.example.demo112.models.Role;
+import org.hibernate.query.Query;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import com.example.demo112.utility.HibernateUtility;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.List;
 import java.util.Optional;
 
 public class RoleRepository {
@@ -19,9 +22,8 @@ public class RoleRepository {
     }
 
     public Optional<Role> findById(Long roleId) {
-        Session session = sessionFactory.openSession();
 
-        try {
+        try (Session session = sessionFactory.openSession()) {
 
             return Optional.ofNullable(session.get(Role.class, roleId));
         } catch (Exception e) {
@@ -29,5 +31,12 @@ public class RoleRepository {
         }
 
         return Optional.empty();
+    }
+
+    public List<Role> findAll() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Role> query = session.createQuery("FROM Role", Role.class);
+            return query.list();
+        }
     }
 }

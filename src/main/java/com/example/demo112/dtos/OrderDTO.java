@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class OrderDTO {
     @Min(value = 1, message = "User's ID must be > 0")
     private Long userId;
 
-    @JsonProperty("fullname")
+    @JsonProperty("full_name")
     private String fullName;
 
     private String email;
@@ -26,6 +27,8 @@ public class OrderDTO {
     private String address;
 
     private String note;
+    @JsonProperty("status")
+    private String status;
 
     @JsonProperty("total_money")
     @Min(value = 0, message = "Total money must be >= 0")
@@ -38,10 +41,13 @@ public class OrderDTO {
     private String shippingAddress;
 
     @JsonProperty("shipping_date")
-    private Date shippingDate;
+    private LocalDate shippingDate;
 
     @JsonProperty("payment_method")
     private String paymentMethod;
+    @JsonProperty("coupon_code")
+    private String couponCode;
+
 
     @JsonProperty("cart_items")
     private List<CartItemDTO> cartItems;
@@ -121,11 +127,11 @@ public class OrderDTO {
         this.shippingAddress = shippingAddress;
     }
 
-    public Date getShippingDate() {
+    public LocalDate getShippingDate() {
         return shippingDate;
     }
 
-    public void setShippingDate(Date shippingDate) {
+    public void setShippingDate(LocalDate shippingDate) {
         this.shippingDate = shippingDate;
     }
 
@@ -143,5 +149,21 @@ public class OrderDTO {
 
     public void setCartItems(List<CartItemDTO> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 }

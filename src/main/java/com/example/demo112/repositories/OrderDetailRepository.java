@@ -1,6 +1,7 @@
 package com.example.demo112.repositories;
 
 import com.example.demo112.models.OrderDetail;
+import com.example.demo112.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -34,6 +35,21 @@ public class OrderDetailRepository {
         } finally {
             session.close();
         }
+    }
+
+    public OrderDetail save(OrderDetail orderDetail) {
+        try (Session session = sessionFactory.openSession()) {
+            try {
+                session.beginTransaction();
+                session.save(orderDetail);
+                session.getTransaction().commit();
+            } catch (RuntimeException e) {
+                session.getTransaction().rollback();
+                e.printStackTrace();
+                System.err.println("Error occurred while saving the user: " + e.getMessage());
+            }
+        }
+        return orderDetail;
     }
 
     public List<OrderDetail> findByOrderId(Long orderId) {

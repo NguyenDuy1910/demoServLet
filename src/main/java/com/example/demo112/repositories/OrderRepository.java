@@ -5,11 +5,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import java.util.List;
 
 public class OrderRepository {
@@ -78,4 +81,40 @@ public class OrderRepository {
 
         return orders;
     }
+
+    public Page<Order> findByKeyword(String keyword, Pageable pageable) {
+        Session session = sessionFactory.openSession();
+
+        // Create the base query
+        String queryString = "FROM Order o WHERE "
+                + "(o.active = true AND (:keyword IS NULL OR :keyword = '' OR "
+                + "o.fullName LIKE CONCAT('%', :keyword, '%') "
+                + "OR o.address LIKE CONCAT('%', :keyword, '%') "
+                + "OR o.note LIKE CONCAT('%', :keyword, '%') "
+                + "OR o.email LIKE CONCAT('%', :keyword, '%')))";
+        Query<Order> query = session.createQuery(queryString, Order.class);
+        query.setParameter("keyword", keyword);
+
+        // Set pagination parameters
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+
+        // Execute the query to get the results
+        List<Order> orders = query.list();
+
+        // Count total results
+        String countQueryString = "SELECT COUNT(o) FROM Order o WHERE "
+                + "(o.active = true AND (:keyword IS NULL OR :keyword = '' OR "
+                + "o.fullName LIKE CONCAT('%', :keyword, '%') "
+                + "OR o.address LIKE CONCAT('%', :keyword, '%') "
+                + "OR o.note LIKE CONCAT('%', :keyword, '%') "
+                + "OR o.email LIKE CONCAT('%', :keyword, '%')))";
+        Query<Long> countQuery = session.createQuery(countQueryString, Long.class);
+        countQuery.setParameter("keyword", keyword);
+        Long totalElements = countQuery.uniqueResult();
+
+        // Create a Page instance with the results and pagination information
+        return new PageImpl<>(orders, pageable, totalElements);
+    }
+
 }

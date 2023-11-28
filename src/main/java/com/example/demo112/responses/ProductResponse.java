@@ -43,6 +43,19 @@ public class ProductResponse extends BaseResponse {
 
     }
 
+    public static List<ProductResponse> fromProducts(List<Product> products) {
+        List<ProductResponse> productResponses = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponse productResponse = new ProductResponse(product.getId(), product.getName(),
+                    product.getPrice(), product.getThumbnail(), product.getDescription(),
+                    product.getProductImages(), product.getCategory().getId());
+            productResponse.setCreatedAt(product.getCreatedAt());
+            productResponse.setUpdatedAt(product.getUpdatedAt());
+            productResponses.add(productResponse);
+        }
+        return productResponses;
+    }
+
     public Long getId() {
         return id;
     }
@@ -81,5 +94,13 @@ public class ProductResponse extends BaseResponse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<ProductImage> getProductImages() {
+        return productImages;
+    }
+
+    public void setProductImages(List<ProductImage> productImages) {
+        this.productImages = productImages;
     }
 }

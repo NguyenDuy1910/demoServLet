@@ -11,8 +11,12 @@ import com.example.demo112.repositories.OrderDetailRepository;
 import com.example.demo112.repositories.OrderRepository;
 import com.example.demo112.repositories.ProductRepository;
 import com.example.demo112.repositories.UserRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,27 +26,28 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository=new OrderRepository();
     private final ProductRepository productRepository=new ProductRepository();
     private final OrderDetailRepository orderDetailRepository=new OrderDetailRepository();
+    private final ModelMapper modelMapper = new ModelMapper();
 @Override
 public Order createOrder(OrderDTO orderDTO) throws Exception{
     User user = userRepository.findById(orderDTO.getUserId());
+    modelMapper.typeMap(OrderDTO.class, Order.class)
+            .addMappings(mapper -> mapper.skip(Order::setId));
+    // Cập nhật các trường của đơn hàng từ orderDTO
     Order order = new Order();
+    modelMapper.map(orderDTO, order);
     order.setUser(user);
-    //tôi đặt hàng nhưng có thể lấy tên,địa chỉ người khác nên không nhất thiết trường fullName phải giống bảng
-
-    order.setEmail(orderDTO.getEmail());
-    order.setPhoneNumber(user.getPhoneNumber());
-    order.setOrderDate(new Date());
-////    order.setStatus();
-//    Date shippingDate = orderDTO.getShippingDate() == null
-//            ? Date.now() : orderDTO.getShippingDate();
-//    if (shippingDate.isBefore(Date.now())) {
-//        throw new DataNotFoundException("Date must be at least today !");
-//    }
-
-    order.setShippingDate(orderDTO.getShippingDate());
-    order.setActive(true) ;
+    order.setOrderDate(LocalDate.now());//lấy thời điểm hiện tại
+    order.setStatus(orderDTO.getStatus());
+    //Kiểm tra shipping date phải >= ngày hôm nay
+    LocalDate shippingDate = orderDTO.getShippingDate() == null
+            ? LocalDate.now() : orderDTO.getShippingDate();
+    if (shippingDate.isBefore(LocalDate.now())) {
+        throw new DataNotFoundException("Date must be at least today !");
+    }
+    order.setShippingDate(shippingDate);
+    order.setActive(true);//đoạn này nên set sẵn trong sql
     order.setTotalMoney(orderDTO.getTotalMoney());
-orderRepository.save(order);
+    orderRepository.save(order);
     List<OrderDetail>orderDetails=new ArrayList<>();
     for(CartItemDTO cartItemDTO: orderDTO.getCartItems())
 {
@@ -51,18 +56,36 @@ orderRepository.save(order);
     Long productId=cartItemDTO.getProductId();
 
     int quantity=cartItemDTO.getQuantity();
-//    Product product=productRepository.findProductById(productId);
-//    System.out.println(product);
-//    orderDetail.setProduct(product);
-//    orderDetail.setNumberOfProducts(quantity);
-//    orderDetail.setPrice(product.getPrice());
-//    orderDetails.add(orderDetail);
-//    orderDetailRepository.saveAll(orderDetails);
+    Product product = productRepository.findProductById(productId);
+    orderDetail.setProduct(product);
+    orderDetail.setNumberOfProducts(quantity);
+    // Các trường khác của OrderDetail nếu cần
+    orderDetail.setPrice(product.getPrice());
+
+    // Thêm OrderDetail vào danh sách
+    orderDetails.add(orderDetail);
 }
-return order;
+    orderDetailRepository.saveAll(orderDetails);
+
+    return order;
 
 
 
 }
 
+    @Override
+    public Order getOrder(Long id) {
+        Order selectedOrder = orderRepository.findById(id);
+        return selectedOrder;
+
+    }
+
+    @Override
+    public Page<Order> getOrdersByKeyword(String keyword, Pageable pageable) {
+        return orderRepository.findByKeyword(keyword, pageable);
+    }
 }
+
+
+
+

@@ -1,5 +1,7 @@
 package com.example.demo112.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,12 +12,14 @@ public class OrderDetail extends BaseEntity{
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
 
     @Column(name = "price", nullable = false)
     private Float price;
