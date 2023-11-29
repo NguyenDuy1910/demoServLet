@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jboss.weld.context.http.Http;
@@ -51,10 +52,10 @@ public class OrderController extends HttpServlet {
         try {
 
             Order order = orderService.createOrder(orderDTO);
-            OrderResponse orderResponse = OrderResponse.fromOrder(order);
+//            OrderResponse orderResponse = OrderResponse.fromOrder(order);
             // Handle successful registration
             response.setStatus(HttpServletResponse.SC_OK);
-            String json = objectMapper.writeValueAsString(orderResponse);
+            String json = objectMapper.writeValueAsString(order);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json);
@@ -98,7 +99,7 @@ public class OrderController extends HttpServlet {
             int limit = Integer.parseInt(request.getParameter("limit"));
             PageRequest pageRequest = PageRequest.of(
                     page - 1, limit,
-                    Sort.by("id").ascending()
+                    Sort.by("user.id").ascending()
             );
             Page<OrderResponse> orderPage = orderService.getOrdersByKeyword(keyword, pageRequest)
                     .map(OrderResponse::fromOrder);
@@ -112,6 +113,32 @@ public class OrderController extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json);
 
+        }
+    }
+
+    @Override
+    //    update trạng thái đơn hàng(admin)
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String requestURI = request.getRequestURI();
+        String[] parts = requestURI.split("/");
+        String idString = parts[parts.length - 1];
+        long id = Long.parseLong(idString);
+
+        // Get the request body
+        OrderDTO orderDTO = objectMapper.readValue(request.getInputStream(), OrderDTO.class);
+
+        try {
+            Order order = orderService.updateOrder(id, orderDTO);
+            // Convert the Order object to JSON response
+            String json = objectMapper.writeValueAsString(order);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(e.getMessage());
         }
     }
 

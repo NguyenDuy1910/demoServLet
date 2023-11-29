@@ -84,8 +84,46 @@ public class ProductService implements IProductService {
         throw new IOException("Co ngoai le");
     }
 
+    @Override
     public List<Product> findProductsByIds(List<Long> productIds) {
         return productRepository.findProductsByIds(productIds);
     }
+
+    @Override
+    public Product updateProduct(
+            long id,
+            ProductDTO productDTO
+    )
+            throws Exception {
+        Product existingProduct = getProductById(id);
+        if (existingProduct != null) {
+            //copy các thuộc tính từ DTO -> Product
+            //Có thể sử dụng ModelMapper
+            Category existingCategory = categoryRepository.findById(productDTO.getCategoryId());
+
+            existingProduct.setName(productDTO.getName());
+            existingProduct.setCategory(existingCategory);
+            existingProduct.setPrice(productDTO.getPrice());
+            existingProduct.setDescription(productDTO.getDescription());
+            existingProduct.setThumbnail(productDTO.getThumbnail());
+            return productRepository.updateProduct(existingProduct);
+        }
+        return null;
+
+    }
+
+    @Override
+    public void deleteProduct(long id) {
+        productRepository.deleteProduct(id);
+
+    }
+
+    @Override
+    public Product updateProductThumbnail(long id, String thumbnailUrl) throws Exception {
+        return productRepository.updateProductThumbnail(id, thumbnailUrl);
+
+
+    }
+
 
 }

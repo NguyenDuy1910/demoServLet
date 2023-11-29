@@ -6,8 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
-import javax.persistence.Query;
+//import javax.persistence.Query;
 import java.util.List;
 
 public class OrderDetailRepository {
@@ -62,7 +63,7 @@ public class OrderDetailRepository {
             transaction = session.beginTransaction();
 
             String hql = "FROM OrderDetail od WHERE od.order.id = :orderId";
-            Query query = session.createQuery(hql);
+            Query<OrderDetail> query = session.createQuery(hql);
             query.setParameter("orderId", orderId);
 
             orderDetails = query.getResultList();

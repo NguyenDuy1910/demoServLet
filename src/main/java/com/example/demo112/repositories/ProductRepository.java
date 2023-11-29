@@ -115,6 +115,47 @@ public class ProductRepository {
         }
     }
 
+    public Product updateProductThumbnail(long id, String thumbnailUrl) {
+        try (Session session = SESSION_FACTORY.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            Product product = session.get(Product.class, id);
+            if (product != null) {
+                product.setThumbnail(thumbnailUrl);
+                session.update(product);
+                transaction.commit();
+
+            }
+            return product;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Xử lý các ngoại lệ xảy ra
+            throw new RuntimeException("not update thumbnail.", e);
+        }
+    }
+
+    public Product updateProduct(Product updatedProduct) {
+        try (Session session = SESSION_FACTORY.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            Product existingProduct = session.get(Product.class, updatedProduct.getId());
+            if (existingProduct != null) {
+                // Update the fields of the existing product with the values from the updated product
+                existingProduct.setName(updatedProduct.getName());
+                existingProduct.setPrice(updatedProduct.getPrice());
+                // Update other fields as needed
+
+                session.update(existingProduct);
+                transaction.commit();
+            }
+            return existingProduct;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle any exceptions that occur
+            throw new RuntimeException("Failed to update product.", e);
+        }
+    }
+
     public List<Product> findProductsByIds(List<Long> productIds) {
         try (Session session = SESSION_FACTORY.openSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -127,6 +168,21 @@ public class ProductRepository {
             e.printStackTrace();
             // Xử lý các ngoại lệ xảy ra
             throw new RuntimeException("Không thể lấy danh sách sản phẩm theo IDs.", e);
+        }
+    }
+
+    public void deleteProduct(long id) {
+        try (Session session = SESSION_FACTORY.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            Product product = session.get(Product.class, id);
+            if (product != null) {
+                session.delete(product);
+                transaction.commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to delete product.", e);
         }
     }
 

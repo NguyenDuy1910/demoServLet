@@ -11,8 +11,10 @@ import com.example.demo112.repositories.OrderDetailRepository;
 import com.example.demo112.repositories.OrderRepository;
 import com.example.demo112.repositories.ProductRepository;
 import com.example.demo112.repositories.UserRepository;
+import com.example.demo112.responses.OrderResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 
@@ -59,8 +61,11 @@ public Order createOrder(OrderDTO orderDTO) throws Exception{
     Product product = productRepository.findProductById(productId);
     orderDetail.setProduct(product);
     orderDetail.setNumberOfProducts(quantity);
+
     // Các trường khác của OrderDetail nếu cần
     orderDetail.setPrice(product.getPrice());
+    orderDetail.setTotalMoney(orderDetail.getPrice() * orderDetail.getNumberOfProducts());
+    orderDetail.setColor("red");
 
     // Thêm OrderDetail vào danh sách
     orderDetails.add(orderDetail);
@@ -74,15 +79,39 @@ public Order createOrder(OrderDTO orderDTO) throws Exception{
 }
 
     @Override
+
+    public Order updateOrder(Long id, OrderDTO orderDTO) throws Exception {
+        Order order = orderRepository.findById(id);
+        LocalDate orderDate = order.getOrderDate();
+        LocalDate shippingDate = order.getShippingDate();
+//                new DataNotFoundException("Cannot find order with id: " + id));
+        User existingUser = userRepository.findById(
+                orderDTO.getUserId());
+//                new DataNotFoundException("Cannot find user with id: " + id));
+        // Tạo một luồng bảng ánh xạ riêng để kiểm soát việc ánh xạ
+        modelMapper.typeMap(OrderDTO.class, Order.class)
+                .addMappings(mapper -> mapper.skip(Order::setId));
+        modelMapper.map(orderDTO, order);
+        order.setOrderDate(orderDate);
+        order.setShippingDate(shippingDate);
+
+//        order.setUser(existingUser);
+//        order.setId()
+        return orderRepository.update(order);
+    }
+
+
+    @Override
     public Order getOrder(Long id) {
         Order selectedOrder = orderRepository.findById(id);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(id);
+        selectedOrder.setOrderDetails(orderDetails);
         return selectedOrder;
-
     }
 
     @Override
-    public Page<Order> getOrdersByKeyword(String keyword, Pageable pageable) {
-        return orderRepository.findByKeyword(keyword, pageable);
+    public Page<Order> getOrdersByKeyword(String keyword, PageRequest pageRequest) {
+        return orderRepository.findByKeyword(keyword, pageRequest);
     }
 }
 

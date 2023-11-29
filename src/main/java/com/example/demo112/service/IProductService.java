@@ -16,8 +16,12 @@ public interface IProductService {
 
     Product getProductById(Long id) throws IOException;
 Page<ProductResponse> getAllProducts(String keyword, int categoryId, PageRequest pageRequest);
-//Product updateProduct(long id, ProductDTO productDTO) throws Exception;
-//    void deleteProduct(long id);
+
+    Product updateProduct(long id, ProductDTO productDTO) throws Exception;
+
+    Product updateProductThumbnail(long id, String thumbnailUrl) throws Exception;
+
+    void deleteProduct(long id);
 //    boolean existsByName(String name);
     ProductImage createProductImage(
             Long productId,

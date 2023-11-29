@@ -8,6 +8,7 @@ import com.example.demo112.responses.*;
 import com.example.demo112.service.IProductService;
 import com.example.demo112.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jakarta.activation.MimetypesFileTypeMap;
@@ -62,26 +63,28 @@ public class ProductController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
 
-        request.setCharacterEncoding("utf-8");
-        response.setCharacterEncoding("utf-8");
+
 
         try {
             ProductDTO productDTO = objectMapper.readValue(request.getInputStream(), ProductDTO.class);
-            System.out.println(productDTO);
-            Product product = productService.createProduct(productDTO);
-            System.out.println(product);
-
+            Product newproduct = productService.createProduct(productDTO);
+            response.setStatus(HttpServletResponse.SC_OK);
+            String json = objectMapper.writeValueAsString(newproduct);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
             // Thực hiện các xử lý khác nếu cần
-            response.getWriter().write("Product added successfully!");
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().write("Failed to add product: " + e.getMessage());
         }
-        } else if (pathInfo.startsWith("/upload/")) {
+        } else if (pathInfo.startsWith("/uploads/")) {
 
             try {
-                String productIdString = pathInfo.substring("/upload/".length()); // Extract the id from the path
+                String productIdString = pathInfo.substring("/uploads/".length()); // Extract the id from the path
                 Long productId = Long.parseLong(productIdString);
 
                 List<Part> files = request.getParts().stream()
@@ -94,6 +97,8 @@ public class ProductController extends HttpServlet {
                 }
 
                 List<ProductImage> productImages = new ArrayList<>();
+                String thumbnailUrl = null; // Biến lưu trữ URL thumbnail
+
                 for (Part filePart : files) {
                     if (filePart.getSize() == 0) {
                         continue;
@@ -113,11 +118,17 @@ public class ProductController extends HttpServlet {
 
                     // Lưu file và cập nhật thumbnail trong DTO
                     String filename = storeFile(filePart);
+                    if (thumbnailUrl == null) {
+                        thumbnailUrl = filename;
+                    }
                     System.out.println(filename);
+
                     // Lưu vào đối tượng product trong DB
                     ProductImage productImage = productService.createProductImage(productId, filename);
                     productImages.add(productImage);
                 }
+                productService.updateProductThumbnail(productId, thumbnailUrl);
+
 
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write(productImages.toString());
@@ -261,6 +272,29 @@ public class ProductController extends HttpServlet {
 
 
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String pathInfo = request.getPathInfo();
+        if (pathInfo != null && pathInfo.matches("/\\d+")) {
+            // Extract the ID from the path variable
+            String id = pathInfo.substring(1); // Remove the leading slash ("/")
+            long orderId = Long.parseLong(id);
+            try {
+                ProductDTO productDTO = objectMapper.readValue(request.getInputStream(), ProductDTO.class);
+
+
+                Product updatedProduct = productService.updateProduct(orderId, productDTO);
+            } catch (Exception e) {
+                // Handle any exceptions that occur
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
+            }
+        }
+    }
+
 }
 
 
