@@ -3,9 +3,11 @@ package com.example.demo112.service;
 import com.example.demo112.dtos.ProductDTO;
 import com.example.demo112.exceptions.DataNotFoundException;
 import com.example.demo112.models.Category;
+import com.example.demo112.models.OrderDetail;
 import com.example.demo112.models.Product;
 import com.example.demo112.models.ProductImage;
 import com.example.demo112.repositories.CategoryRepository;
+import com.example.demo112.repositories.OrderDetailRepository;
 import com.example.demo112.repositories.ProductImageRepository;
 import com.example.demo112.repositories.ProductRepository;
 import com.example.demo112.responses.ProductResponse;
@@ -18,6 +20,7 @@ import java.util.Optional;
 
 public class ProductService implements IProductService {
     private final ProductRepository productRepository = new ProductRepository();
+    private final OrderDetailRepository orderDetailRepository = new OrderDetailRepository();
     private final ProductImageRepository productImageRepository = new ProductImageRepository();
     private final CategoryRepository categoryRepository = new CategoryRepository();
     @Override
@@ -114,8 +117,18 @@ public class ProductService implements IProductService {
 
     @Override
     public void deleteProduct(long id) {
-        productRepository.deleteProduct(id);
+        Optional<Product> findProduct = productRepository.getDetailProduct(id);
+        List<OrderDetail> orderDetailList = null;
+        long productNotFound = 33L;
+        Product product = productRepository.findProductById(productNotFound);
 
+
+        if (findProduct.isPresent()) {
+            orderDetailList = orderDetailRepository.findProductById(id, product);
+
+
+            productRepository.deleteProduct(id);
+        }
     }
 
     @Override

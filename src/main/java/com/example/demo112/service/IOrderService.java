@@ -17,7 +17,7 @@ public interface IOrderService {
 
     Order updateOrder(Long id, OrderDTO orderDTO) throws Exception;
 //    void deleteOrder(Long id);
-//    List<Order> findByUserId(Long userId);
+List<Order> findByUserId(Long userId);
 Page<Order> getOrdersByKeyword(String keyword, PageRequest pageRequest);
 
 }

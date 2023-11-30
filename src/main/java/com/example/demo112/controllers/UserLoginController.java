@@ -1,6 +1,8 @@
 package com.example.demo112.controllers;
 
 import com.example.demo112.components.JwtTokenUtils;
+import com.example.demo112.dtos.UpdateUserDTO;
+import com.example.demo112.dtos.UserDTO;
 import com.example.demo112.dtos.UserLoginDTO;
 import com.example.demo112.models.User;
 import com.example.demo112.responses.LocalDateAdapter;
@@ -11,6 +13,7 @@ import com.example.demo112.service.IUserService;
 import com.example.demo112.service.UserService;
 import com.example.demo112.utils.MessageKeys;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -90,6 +93,40 @@ public class UserLoginController extends HttpServlet {
                 response.setContentType("text/plain");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write(MessageKeys.LOGIN_FAILED);
+            }
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String pathInfo = request.getPathInfo();
+        if (pathInfo.startsWith("/details")) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            try {
+
+                Long userId = Long.parseLong(pathInfo.substring(9)); // Extract userId from the path
+                String authorizationHeader = request.getHeader("Authorization");
+                String extractedToken = authorizationHeader.substring(7);
+
+
+                User user = userService.getUserDetailsFromToken(extractedToken);
+                // Ensure that the user making the request matches the user being updated
+                if (user.getId() != userId) {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    return;
+                }
+                UpdateUserDTO updatedUserDTO = objectMapper.readValue(request.getInputStream(), UpdateUserDTO.class);
+
+
+                User updatedUser = userService.updateUser(userId, updatedUserDTO);
+                String json = objectMapper.writeValueAsString(updatedUser);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(json);
+
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         }
     }

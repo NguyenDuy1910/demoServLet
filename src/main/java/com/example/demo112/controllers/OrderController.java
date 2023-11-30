@@ -93,13 +93,37 @@ public class OrderController extends HttpServlet {
                 // ...
             }
         }
+        if (pathInfo != null && pathInfo.startsWith("/user")) {
+            String requestURI = request.getRequestURI();
+            String[] pathParts = requestURI.split("/");
+            if (pathParts.length >= 5) {
+                try {
+                    Long userId = Long.parseLong(pathParts[4]);
+                    List<Order> orders = orderService.findByUserId(userId);
+                    String jsonResponse = objectMapper.writeValueAsString(orders);
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(jsonResponse);
+                } catch (NumberFormatException e) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().write("Invalid user ID");
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().write(e.getMessage());
+                }
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+        }
+            
+
         if (pathInfo != null && pathInfo.equals("/get-orders-by-keyword")) {
             String keyword = request.getParameter("keyword");
             int page = Integer.parseInt(request.getParameter("page"));
             int limit = Integer.parseInt(request.getParameter("limit"));
             PageRequest pageRequest = PageRequest.of(
                     page - 1, limit,
-                    Sort.by("user.id").ascending()
+                    Sort.by("id").ascending()
             );
             Page<OrderResponse> orderPage = orderService.getOrdersByKeyword(keyword, pageRequest)
                     .map(OrderResponse::fromOrder);

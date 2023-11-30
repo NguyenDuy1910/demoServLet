@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import jakarta.activation.MimetypesFileTypeMap;
 import org.hibernate.proxy.HibernateProxy;
 import org.slf4j.Logger;
@@ -127,11 +128,15 @@ public class ProductController extends HttpServlet {
                     ProductImage productImage = productService.createProductImage(productId, filename);
                     productImages.add(productImage);
                 }
-                productService.updateProductThumbnail(productId, thumbnailUrl);
-
-
+                Product upload = productService.updateProductThumbnail(productId, thumbnailUrl);
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write(productImages.toString());
+                String json = objectMapper.writeValueAsString(upload);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(json);
+
+
+
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write(e.getMessage());
@@ -287,6 +292,11 @@ public class ProductController extends HttpServlet {
 
 
                 Product updatedProduct = productService.updateProduct(orderId, productDTO);
+                response.setStatus(HttpServletResponse.SC_OK);
+                String json = objectMapper.writeValueAsString(updatedProduct);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(json);
             } catch (Exception e) {
                 // Handle any exceptions that occur
                 e.printStackTrace();
@@ -295,6 +305,37 @@ public class ProductController extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String pathInfo = request.getPathInfo();
+        if (pathInfo != null && pathInfo.matches("/\\d+")) {
+            // Extract the ID from the path variable
+
+            try {
+                String id = pathInfo.substring(1); // Remove the leading slash ("/")
+                long productId = Long.parseLong(id);
+
+                productService.deleteProduct(productId);
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("message", String.format("Product with id = %d deleted successfully", productId));
+
+// Create an instance of Gson
+                Gson gson = new Gson();
+
+// Convert the JsonObject to JSON format
+                String json = gson.toJson(jsonObject);
+
+// Write the JSON string to the response
+                response.getWriter().write(json);
+            } catch (Exception e) {
+                // Handle any exceptions that occur
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
+            }
+
+        }
+
+    }
 }
 
 

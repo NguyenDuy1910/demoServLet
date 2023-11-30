@@ -57,5 +57,21 @@ public class UserRepository {
         return null;
     }
 
+    public User update(User user) {
+        try (Session session = SESSION_FACTORY.openSession()) {
+            try {
+                session.beginTransaction();
+                session.update(user);
+                session.getTransaction().commit();
+            } catch (RuntimeException e) {
+                session.getTransaction().rollback();
+                e.printStackTrace();
+                System.err.println("Error occurred while updating the user: " + e.getMessage());
+            }
+        }
+        return user;
+    }
+
+
     // Add other repository methods as needed
 }

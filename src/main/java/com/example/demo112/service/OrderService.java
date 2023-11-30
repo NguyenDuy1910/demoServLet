@@ -113,6 +113,12 @@ public Order createOrder(OrderDTO orderDTO) throws Exception{
     public Page<Order> getOrdersByKeyword(String keyword, PageRequest pageRequest) {
         return orderRepository.findByKeyword(keyword, pageRequest);
     }
+
+    @Override
+    public List<Order> findByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
 }
 
 
