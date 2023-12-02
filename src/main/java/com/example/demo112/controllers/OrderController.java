@@ -2,8 +2,11 @@ package com.example.demo112.controllers;
 
 import com.example.demo112.dtos.OrderDTO;
 import com.example.demo112.models.Order;
+import com.example.demo112.models.OrderDetail;
 import com.example.demo112.responses.*;
+import com.example.demo112.service.IOrderDetailService;
 import com.example.demo112.service.IOrderService;
+import com.example.demo112.service.OrderDetailService;
 import com.example.demo112.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -20,7 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.jboss.weld.context.http.Http;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +31,8 @@ import org.springframework.data.domain.Sort;
 public class OrderController extends HttpServlet {
     private final IOrderService orderService = new OrderService();
     private final ObjectMapper objectMapper = new ObjectMapper();
-
+    private final IOrderDetailService orderDetailService = new OrderDetailService();
+    private final MailResponse mailResponse = new MailResponse();
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Đặt các tiêu đề CORS
@@ -59,6 +62,10 @@ public class OrderController extends HttpServlet {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json);
+            mailResponse.sendOrderConfirmation(order);
+
+
+
 
 
         } catch (Exception e) {
@@ -160,6 +167,7 @@ public class OrderController extends HttpServlet {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json);
+            mailResponse.sendStatusOrder(order);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(e.getMessage());

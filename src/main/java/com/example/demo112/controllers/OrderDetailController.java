@@ -1,16 +1,12 @@
 package com.example.demo112.controllers;
 
 import com.example.demo112.dtos.OrderDetailDTO;
-import com.example.demo112.dtos.UserDTO;
 import com.example.demo112.models.OrderDetail;
 import com.example.demo112.responses.OrderDetailResponse;
 import com.example.demo112.service.IOrderDetailService;
-import com.example.demo112.service.IOrderService;
 import com.example.demo112.service.OrderDetailService;
-import com.example.demo112.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

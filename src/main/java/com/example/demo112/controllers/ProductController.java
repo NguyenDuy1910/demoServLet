@@ -3,7 +3,6 @@ package com.example.demo112.controllers;
 import com.example.demo112.dtos.ProductDTO;
 import com.example.demo112.models.Product;
 import com.example.demo112.models.ProductImage;
-//import com.example.demo112.responses.HibernateProxyTypeAdapter;
 import com.example.demo112.responses.*;
 import com.example.demo112.service.IProductService;
 import com.example.demo112.service.ProductService;
@@ -12,8 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import jakarta.activation.MimetypesFileTypeMap;
-import org.hibernate.proxy.HibernateProxy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.UrlResource;

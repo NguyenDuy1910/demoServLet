@@ -71,6 +71,7 @@ public Order createOrder(OrderDTO orderDTO) throws Exception{
     orderDetails.add(orderDetail);
 }
     orderDetailRepository.saveAll(orderDetails);
+    order.setOrderDetails(orderDetails);
 
     return order;
 

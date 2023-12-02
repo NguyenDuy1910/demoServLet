@@ -1,12 +1,12 @@
 package com.example.demo112.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.validation.constraints.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="mailgunConfig" class="com.example.demo112.components.MailgunConfig">
+        <property name="apiKey" value="9ca867544a68bfbcf449fe84abc2f83e-30b58138-08e8b8a7"/>
+        <property name="domain" value="sandboxc9b33afb62fb4db2a99ce9d853b3e8a9.mailgun.org"/>
+    </bean>
+</beans>

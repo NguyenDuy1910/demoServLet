@@ -1,0 +1,4 @@
+mailgun:
+  api_key: 9ca867544a68bfbcf449fe84abc2f83e-30b58138-08e8b8a7
+  domain: sandboxc9b33afb62fb4db2a99ce9d853b3e8a9.mailgun.org
+#  from_address: YOUR_FROM_ADDRESS
